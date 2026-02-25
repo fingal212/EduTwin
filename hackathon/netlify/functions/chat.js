@@ -9,41 +9,34 @@ exports.handler = async function(event, context) {
         return { statusCode: 200, headers, body: '' };
     }
 
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-    }
-
     try {
+        // БЕРЕМ КЛЮЧ ИЗ НАСТРОЕК NETLIFY
         const API_KEY = process.env.GEMINI_API_KEY;
-        if (!API_KEY) throw new Error('API ключ не найден');
 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+        // Защита: если ключ забыли добавить в Netlify, выводим понятную ошибку
+        if (!API_KEY) {
+            throw new Error("Ключ GEMINI_API_KEY не найден в переменных окружения Netlify!");
+        }
 
-        // Парсим данные от клиента (текст + картинка)
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
         const requestBody = JSON.parse(event.body);
-        const userMessage = requestBody.message || "Посмотри на это фото"; 
-        const imageBase64 = requestBody.image; // Получаем картинку, если она есть
-
-        // Собираем части запроса (parts)
+        const userMessage = requestBody.message || "Привет"; 
+        
         let parts = [{ text: userMessage }];
 
-        // Если есть картинка, добавляем её в запрос для Gemini
-        if (imageBase64) {
-            // Вытаскиваем тип (mime type) и сами данные (base64)
-            const matches = imageBase64.match(/^data:(.+);base64,(.+)$/);
+        if (requestBody.image) {
+            const matches = requestBody.image.match(/^data:(.+);base64,(.+)$/);
             if (matches) {
                 parts.push({
-                    inline_data: {
-                        mime_type: matches[1],
-                        data: matches[2]
-                    }
+                    inline_data: { mime_type: matches[1], data: matches[2] }
                 });
             }
         }
 
         const geminiPayload = {
             system_instruction: {
-                parts: [{ text: "Ты — Saule AI, умный ассистент платформы EduTwin. Твоя задача — помогать студентам. Материалы курса: https://drive.google.com/drive/folders/1_n1e_KxUTyCqMp2RoDQLJ9QZiDAFwAhn" }]
+                parts: [{ text: "Ты — Saule AI, умный ассистент образовательной платформы EduTwin. Твоя задача — помогать студентам и преподавателям." }]
             },
             contents: [{ parts: parts }]
         };
@@ -56,7 +49,10 @@ exports.handler = async function(event, context) {
 
         const data = await response.json();
 
-        if (!response.ok) throw new Error(data.error?.message || 'Ошибка API Google');
+        if (!response.ok) {
+            console.error("Google API Error:", data);
+            throw new Error(data.error?.message || 'Ошибка API Google');
+        }
 
         return { statusCode: 200, headers, body: JSON.stringify(data) };
 

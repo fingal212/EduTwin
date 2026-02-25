@@ -1028,53 +1028,24 @@
             resultDiv.innerHTML = 'Генерация ответа...';
 
             try {
+                // ИСПРАВЛЕНИЕ: Теперь обращаемся к вашему бэкенду /api/chat
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: prompt })
+                    body: JSON.stringify({ message: prompt }) // Отправляем промпт как обычное сообщение
                 });
 
-                if (!response.ok) throw new Error('Ошибка сервера Netlify');
+                if (!response.ok) throw new Error('Ошибка сервера');
                 
                 const data = await response.json();
                 
-                
-                let text = "AI не смог сформулировать ответ.";
+                // Вытаскиваем текст ответа
+                let text = "Не удалось получить ответ.";
                 if (data.candidates && data.candidates[0].content) {
                     text = data.candidates[0].content.parts[0].text;
                 }
                 
-                
-                const cleanText = text.replace(/```html/g, '').replace(/```/g, '');
-                
-                resultDiv.innerHTML = cleanText;
-            } catch (error) {
-                console.error("Ошибка инструмента:", error);
-                resultDiv.innerText = 'Ошибка при генерации. Проверьте консоль.';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'Сгенерировать <i class="fas fa-magic"></i>';
-            }
-        }
-
-            // UI Loading State
-            btn.disabled = true;
-            btn.innerHTML = 'Думаю... <i class="fas fa-spinner fa-spin"></i>';
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = 'Генерация ответа...';
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-
-                if (!response.ok) throw new Error('Ошибка API');
-                const data = await response.json();
-                const text = data.candidates[0].content.parts[0].text;
-                
-                // Clean markdown code blocks if present
+                // Очищаем от markdown
                 const cleanText = text.replace(/```html/g, '').replace(/```/g, '');
                 
                 resultDiv.innerHTML = cleanText;
