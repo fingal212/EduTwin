@@ -1,0 +1,10 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+# Перенаправление:
+# Когда фронтенд просит /api/chat -> Netlify запускает функцию chat.js
+[[redirects]]
+  from = "/api/chat"
+  to = "/.netlify/functions/chat"
+  status = 200
