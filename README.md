@@ -32,4 +32,4 @@
 
 1. Склонируйте репозиторий:
    ```bash
-   git clone [https://github.com/fingal212/EduTwin_Hackathon-.git](https://github.com/fingal212/EduTwin_Hackathon-.git)
+   git clone [https://github.com/fingal212/EduTwin.git](https://github.com/fingal212/EduTwin.git)
