@@ -1,10 +1,10 @@
 # 🎓 EduTwin — Ваш персональный цифровой двойник в обучении
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/default/deploy-status)](https://sauleser1kovna.netlify.app)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/default/deploy-status)](https://s4uleserikovna.netlify.app)
 
 **EduTwin** — это инновационная образовательная платформа, созданная в рамках хакатона «BilimHack Almaty». Проект решает кейс **«AI-агент для тестирования и наставничества»**, автоматизируя экзамены и превращая тестирование в мощный инструмент обучения.
 
-🔗 **[Посмотреть рабочий проект (Live Demo)](https://sauleser1kovna.netlify.app)**
+🔗 **[Посмотреть рабочий проект (Live Demo)](https://s4uleserikovna.netlify.app)**
 
 ## 💡 О проекте
 Мы разработали систему, которая объединяет генерацию тестов, автоматическую проверку и интеллектуальное наставничество в единый бесшовный процесс. 
